@@ -3,11 +3,16 @@ package com.api.myrest.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.myrest.entities.PersonEntity;
+import com.api.myrest.models.ResponseModel;
+import com.api.myrest.models.request.SavePersonRequest;
 import com.api.myrest.services.PersonService;
 
 @RestController
@@ -17,15 +22,20 @@ public class PersonRestController {
 	
 	@GetMapping("${v1API}/person/list")
 	public List<PersonEntity> listPerson() {
-		List<PersonEntity> p = this.personService.getPersons();
+		List<PersonEntity> p = this.personService.findAllPersons();
 		
 		return p;
 	}
 	
-	@GetMapping("${v1API}/person/get/{id}")
-	public List<PersonEntity> getPerson(@PathVariable Integer id) {
-		List<PersonEntity> p = this.personService.getPersons();
+	@PostMapping("${v1API}/person/save")
+	public ResponseModel saveAgentAction(@RequestBody SavePersonRequest body) {
+		ResponseModel res = this.personService.savePerson(body);
 		
-		return p;
+		return res;
+	}
+	
+	@DeleteMapping("${v1API}/person/delete/{id}")
+	public ResponseModel deletePerson(@PathVariable Integer id) {
+		return this.personService.deletePerson(id);
 	}
 }

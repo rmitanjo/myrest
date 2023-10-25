@@ -15,7 +15,8 @@ import lombok.Setter;
 @Table(name="t_person")
 public class PersonEntity {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
 	protected int id;
 
 	@Column(name="last_name")
