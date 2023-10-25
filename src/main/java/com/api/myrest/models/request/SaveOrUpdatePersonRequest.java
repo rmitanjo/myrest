@@ -6,7 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class SavePersonRequest {
+public class SaveOrUpdatePersonRequest {
+	@JsonProperty("id")
+	private Integer id;
+	
 	@JsonProperty("nom")
 	private String nom;
 	

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.api.myrest.entities.PersonEntity;
 import com.api.myrest.models.ResponseModel;
-import com.api.myrest.models.request.SavePersonRequest;
+import com.api.myrest.models.request.SaveOrUpdatePersonRequest;
 import com.api.myrest.repositories.PersonRepository;
 
 @Service
@@ -21,7 +21,7 @@ public class PersonService {
 		return res;
 	}
 	
-	public ResponseModel savePerson(SavePersonRequest body) {
+	public ResponseModel savePerson(SaveOrUpdatePersonRequest body) {
 		ResponseModel res = new ResponseModel();
 		
 		try {
@@ -34,7 +34,6 @@ public class PersonService {
 			res.setSuccess(true);
 		} catch(Exception ex) {
 			res.setMessage(ex.getMessage());
-			res.setSuccess(false);
 		}
 		
 		return res;
@@ -47,10 +46,31 @@ public class PersonService {
 		
 		if(found) {
 			this.personRepository.deleteById(id);
+			
 			res.setSuccess(true);
 			res.setMessage("Person #" + id + " successfully deleted.");
 		} else {
-			res.setSuccess(false);
+			res.setMessage("Person #" + id + " not found");
+		}
+		
+		return res;
+	}
+	
+	public ResponseModel updatePerson(SaveOrUpdatePersonRequest body) {
+		ResponseModel res = new ResponseModel();
+		
+		Integer id = body.getId();
+		boolean found = this.personRepository.existsById(id);
+		
+		if(found) {
+			PersonEntity p = this.personRepository.findById(id).get();
+			p.setNom(body.getNom());
+			p.setPrenoms(body.getPrenoms());
+			this.personRepository.save(p);
+			
+			res.setSuccess(true);
+			res.setMessage("Person #" + id + " successfully updated.");
+		} else {
 			res.setMessage("Person #" + id + " not found");
 		}
 		
